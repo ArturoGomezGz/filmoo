@@ -17,7 +17,7 @@ export default function LoginScreen(props: Props) {
     const [password, setPassword] = useState("");
 
     const handleLogin = () => {
-        console.log("Login normal");
+        router.push("/(tabs)");
     };
 
     const handleForgotPassword = () => {
