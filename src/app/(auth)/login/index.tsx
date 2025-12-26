@@ -11,6 +11,8 @@ import { styles } from "./styles";
 import { router } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../services/firebase";
+// Made components
+import Input  from "../../../components/input";
 
 export default function LoginScreen() {
     const [email, setEmail] = useState("");
@@ -77,30 +79,19 @@ export default function LoginScreen() {
 
             {error && <Text style={styles.errorText}>{error}</Text>}
 
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Correo electrónico</Text>
-            <TextInput
-                value={email}
-                onChangeText={setEmail}
-                placeholder="ejemplo@correo.com"
-                placeholderTextColor="#999"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                style={styles.input}
-            />
-            </View>
-
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Contraseña</Text>
-            <TextInput
-                value={password}
-                onChangeText={setPassword}
-                placeholder="********"
-                placeholderTextColor="#999"
-                secureTextEntry
-                style={styles.input}
-            />
-            </View>
+            <Input 
+                name="Correo electronico" 
+                placeholder="ejemplo@correo.com" 
+                secureTextEntry={false} 
+                value={email} 
+                onChangeText={setEmail} />
+                
+            <Input 
+                name="Contraseña" 
+                placeholder="********" 
+                secureTextEntry={true} 
+                value={password} 
+                onChangeText={setPassword} />
 
             <TouchableOpacity onPress={handleForgotPassword}>
             <Text style={styles.forgotLink}>¿Olvidaste tu contraseña?</Text>

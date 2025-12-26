@@ -11,6 +11,8 @@ import { styles } from "./styles";
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../../services/firebase";
+// Made components
+import Input from "../../../components/input";
 
 export default function CreateAccountScreen() {
   const [name, setName] = useState("");
@@ -83,53 +85,37 @@ export default function CreateAccountScreen() {
 
         {error && <Text style={styles.errorText}>{error}</Text>}
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Nombre</Text>
-          <TextInput
-            value={name}
-            onChangeText={setName}
-            placeholder="Tu nombre"
-            placeholderTextColor="#999"
-            style={styles.input}
-          />
-        </View>
+        <Input
+          name="Nombre completo"
+          placeholder="Tu nombre"
+          secureTextEntry={false}
+          value={name}
+          onChangeText={setName}
+        />
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Correo electrónico</Text>
-          <TextInput
-            value={email}
-            onChangeText={setEmail}
-            placeholder="ejemplo@correo.com"
-            placeholderTextColor="#999"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            style={styles.input}
-          />
-        </View>
+        <Input
+          name="Correo electrónico"
+          placeholder="ejemplo@correo.com"
+          secureTextEntry={false}
+          value={email}
+          onChangeText={setEmail}
+        />
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Contraseña</Text>
-          <TextInput
-            value={password}
-            onChangeText={setPassword}
-            placeholder="********"
-            placeholderTextColor="#999"
-            secureTextEntry
-            style={styles.input}
-          />
-        </View>
+        <Input
+          name="Contraseña"
+          placeholder="********"
+          secureTextEntry={true}
+          value={password}
+          onChangeText={setPassword}
+        />
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Confirmar contraseña</Text>
-          <TextInput
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            placeholder="********"
-            placeholderTextColor="#999"
-            secureTextEntry
-            style={styles.input}
-          />
-        </View>
+        <Input
+          name="Confirmar contraseña"
+          placeholder="********"
+          secureTextEntry={true}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+        />
 
         <TouchableOpacity
           style={[
