@@ -70,4 +70,11 @@ export const styles = StyleSheet.create({
     color: "#777",
     fontSize: 14,
   },
+    errorText: {
+    color: "#E53935",            // rojo legible, no agresivo
+    fontSize: 13,
+    textAlign: "center",
+    marginBottom: 12,
+    paddingHorizontal: 16,
+  }
 });
