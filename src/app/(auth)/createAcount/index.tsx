@@ -9,6 +9,7 @@ import {
   Platform,
 } from "react-native";
 import { styles } from "./styles";
+import { router } from "expo-router";
 
 interface Props {}
 
@@ -91,7 +92,7 @@ export default function CreateAccountScreen(props: Props) {
         </TouchableOpacity>
 
         {/* VOLVER A LOGIN */}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => router.push("/login")}>
           <Text style={styles.secondaryLink}>
             ¿Ya tienes cuenta? Inicia sesión
           </Text>

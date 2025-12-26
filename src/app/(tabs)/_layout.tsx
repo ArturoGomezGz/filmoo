@@ -1,35 +1,36 @@
 import { Tabs } from "expo-router";
-import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Layout() {
     return (
-        <Tabs
-            screenOptions={{
-                tabBarStyle: {
-                    backgroundColor: "#000000ff", 
-                    borderTopColor: "#121212",
-                },
-                tabBarActiveTintColor: "#FFFFFF",
-                tabBarInactiveTintColor: "#888888"
-            }}
-        >
-            <Tabs.Screen
-                name="index"
-                options={{
-                    title: "Inicio",
-                    tabBarLabel: "Inicio",
-                    headerShown: false
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#000000ff" }}>
+            <Tabs
+                screenOptions={{
+                    headerShown: true,
+                    tabBarActiveTintColor: "white",
+                    tabBarStyle: { 
+                        backgroundColor: "#121212",
+                        borderTopColor: "#121212"
+                    },
+                    headerTitleAlign: "center",
                 }}
-            />
-            <Tabs.Screen
-                name="search"
-                options={{
-                    title: "Buscar",
-                    tabBarLabel: "Buscar",
-                    headerShown: false
-                }}
-            />
-        </Tabs>
+            >
+                <Tabs.Screen
+                    name="billboard/index"
+                    options={{
+                        title: "Cartelera",
+                        tabBarLabel: "Cartelera"
+                    }}
+                />
+                <Tabs.Screen
+                    name="profile/index"
+                    options={{
+                        title: "Perfil",
+                        tabBarLabel: "Perfil"
+                    }}
+                />
+            </Tabs>
+        </SafeAreaView>
     );
 }
         
