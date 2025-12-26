@@ -17,7 +17,7 @@ export default function LoginScreen(props: Props) {
     const [password, setPassword] = useState("");
 
     const handleLogin = () => {
-        router.push("/(tabs)/billboard");
+        console.log("Iniciar sesión deshabilitado");
     };
 
     const handleForgotPassword = () => {
@@ -30,8 +30,7 @@ export default function LoginScreen(props: Props) {
     };
 
     const handleGuestLogin = () => {
-        console.log("Entrar como invitado");
-        // lógica de invitado
+        router.push("/(tabs)/billboard");
     };
 
     return (
