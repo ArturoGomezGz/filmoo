@@ -3,7 +3,7 @@ import { AuthProvider } from "../context/AuthContext";
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
+    <AuthProvider children={undefined}>
       <Stack screenOptions={{ headerShown: false }} />
     </AuthProvider>
   );
