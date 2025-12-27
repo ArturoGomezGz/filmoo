@@ -1,6 +1,7 @@
 const baseURL = "https://api.themoviedb.org/3";
 const imageBaseURL = "https://image.tmdb.org/t/p";
 
+// Función para verificar la conexión a la API de TMDB
 async function verifyTMDBConnection(): Promise<boolean> {
     try {
         const apiKey = process.env.EXPO_PUBLIC_TMDB_API_KEY;
@@ -87,6 +88,32 @@ async function getPopularMoviesIds(page: number = 1): Promise<number[]> {
     }
 }
 
+async function getPopularMovies(page: number = 1): Promise<any[]> {
+    try {
+        const apiKey = process.env.EXPO_PUBLIC_TMDB_API_KEY;
+        const response = await fetch(
+            `${baseURL}/movie/popular?page=${page}`,
+            {
+                method: "GET",
+                headers: {
+                    accept: "application/json",
+                    Authorization: `Bearer ${apiKey}`
+                },
+            });
+        if (!response.ok) {
+            console.error("Failed to fetch popular movies:", response.status);
+            return [];
+        }
+
+        const json = await response.json();
+        return json.results || [];
+
+    } catch (error) {
+        console.error("Error fetching popular movies:", error);
+        return [];
+    }
+}
+
 async function getMoviesByName(name: string): Promise<any[]> {
     try {
         const apiKey = process.env.EXPO_PUBLIC_TMDB_API_KEY;
@@ -112,17 +139,5 @@ async function getMoviesByName(name: string): Promise<any[]> {
     }
 }
 
-async function getMoviesPostersByName(name: string, size: string = "w500"): Promise<string[]> {
-    const movies = await getMoviesByName(name);
-    const posterUrls = await Promise.all(
-        movies.map(async (movie) => {
-            const imageUrl = movie.poster_path
-                ? `${imageBaseURL}${size}${movie.poster_path}`
-                : '';
-            return imageUrl;
-        })
-    );
-    return posterUrls.filter(url => url !== '');
-}
 
-export { verifyTMDBConnection, getImageUrl, getPopularMoviesIds, getMoviesByName, getMoviesPostersByName };
+export { verifyTMDBConnection, getImageUrl, getPopularMoviesIds, getPopularMovies, getMoviesByName };

@@ -8,7 +8,8 @@ import {
     Dimensions 
 } from "react-native";
 import { useEffect, useState } from "react";
-import { getImageUrl, getPopularMoviesIds } from "../services/TMDB";
+import { getImageUrl, getPopularMoviesIds, getPopularMovies } from "../services/TMDB";
+import Poster from "./poster";
 
 const { width } = Dimensions.get("window");
 const ITEM_WIDTH = width / 3 - 24;
@@ -16,6 +17,24 @@ const ITEM_WIDTH = width / 3 - 24;
 export default function Billboard() {
     const [images, setImages] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
+    const [movies, setMovies] = useState<any[]>([]);
+
+    const searchMovies = async () => {
+        const result = await getPopularMovies();
+        setMovies(result);
+    };
+
+    const renderMovieItem = ({ item }: { item: any }) => {
+        return (
+            <Poster
+                id={item.id}
+                name={item.title}
+                description={item.overview}
+                imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                onPress={() => {}}
+            />
+        );
+    };
 
     useEffect(() => {
         async function loadBillboard() {

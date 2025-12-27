@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 import { useState } from "react";
 import Input from "../../../components/input";
 import PrimaryButton from "../../../components/buttons/primaryButton";
