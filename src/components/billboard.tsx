@@ -42,6 +42,7 @@ export default function Billboard() {
                         name={item.title}
                         description={item.overview}
                         imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                        onSelect={(item) => {console.log("Selected movie:", item.name)}}
                     />
                 )}
                 showsVerticalScrollIndicator={false}

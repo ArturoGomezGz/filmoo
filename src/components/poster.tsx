@@ -15,6 +15,12 @@ interface Props {
     name: string;
     description: string;
     imageUrl: string;
+    onSelect: (movie: {
+        id: number;
+        name: string;
+        description: string;
+        imageUrl: string;
+    }) => void;
 }
 
 const { width } = Dimensions.get("window");
@@ -25,37 +31,33 @@ export default function Poster({
     name,
     description,
     imageUrl,
+    onSelect,
 }: Props) {
     const [visible, setVisible] = useState(false);
 
-    const openModal = () => {
-        setVisible(true);
-    };
+    const closeModal = () => setVisible(false);
 
-    const closeModal = () => {
-        setVisible(false);
+    const handleSelect = () => {
+        onSelect({
+            id,
+            name,
+            description,
+            imageUrl,
+        });
+        closeModal();
     };
 
     return (
         <>
             <TouchableOpacity
                 activeOpacity={0.85}
-                onPress={openModal}
+                onPress={() => setVisible(true)}
                 style={styles.card}
             >
-                <Image
-                    source={{ uri: imageUrl }}
-                    style={styles.image}
-                    resizeMode="cover"
-                />
+                <Image source={{ uri: imageUrl }} style={styles.image} />
             </TouchableOpacity>
 
-            <Modal
-                visible={visible}
-                transparent
-                animationType="fade"
-                onRequestClose={closeModal}
-            >
+            <Modal transparent visible={visible} animationType="fade">
                 <Pressable style={styles.overlay} onPress={closeModal}>
                     <View style={styles.modal}>
                         <Image
@@ -69,9 +71,21 @@ export default function Poster({
                             {description || "Sin descripción disponible"}
                         </Text>
 
-                        <Pressable style={styles.closeBtn} onPress={closeModal}>
-                            <Text style={styles.closeText}>Cerrar</Text>
-                        </Pressable>
+                        <View style={styles.actions}>
+                            <Pressable
+                                style={styles.closeBtn}
+                                onPress={closeModal}
+                            >
+                                <Text style={styles.closeText}>Cerrar</Text>
+                            </Pressable>
+
+                            <Pressable
+                                style={styles.selectBtn}
+                                onPress={handleSelect}
+                            >
+                                <Text style={styles.selectText}>Elegir</Text>
+                            </Pressable>
+                        </View>
                     </View>
                 </Pressable>
             </Modal>
@@ -92,7 +106,6 @@ const styles = StyleSheet.create({
         height: "100%",
     },
 
-    /* MODAL */
     overlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.6)",
@@ -102,8 +115,8 @@ const styles = StyleSheet.create({
     },
     modal: {
         width: "100%",
-        borderRadius: 16,
         backgroundColor: "#fff",
+        borderRadius: 16,
         padding: 16,
         alignItems: "center",
     },
@@ -125,13 +138,29 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginBottom: 16,
     },
+    actions: {
+        flexDirection: "row",
+        gap: 12,
+        width: "100%",
+    },
     closeBtn: {
-        paddingVertical: 10,
-        paddingHorizontal: 24,
+        flex: 1,
+        paddingVertical: 12,
         borderRadius: 8,
-        backgroundColor: "#000",
+        backgroundColor: "#e0e0e0",
+        alignItems: "center",
     },
     closeText: {
+        fontWeight: "600",
+    },
+    selectBtn: {
+        flex: 1,
+        paddingVertical: 12,
+        borderRadius: 8,
+        backgroundColor: "#0a84ff",
+        alignItems: "center",
+    },
+    selectText: {
         color: "#fff",
         fontWeight: "600",
     },
