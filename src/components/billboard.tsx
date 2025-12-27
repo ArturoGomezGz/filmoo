@@ -28,7 +28,6 @@ export default function Billboard() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Billboard</Text>
 
             <FlatList
                 data={movies}
@@ -54,11 +53,6 @@ export default function Billboard() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    title: {
-        fontSize: 18,
-        fontWeight: "bold",
-        margin: 16,
     },
     list: {
         paddingHorizontal: 12,
