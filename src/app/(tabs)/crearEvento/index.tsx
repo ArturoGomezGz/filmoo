@@ -3,9 +3,7 @@ import { useState } from "react";
 import Input from "../../../components/input";
 import PrimaryButton from "../../../components/buttons/primaryButton";
 import { getMoviesByName } from "@/src/services/TMDB";
-
-const { width } = Dimensions.get("window");
-const ITEM_WIDTH = width / 3 - 16;
+import Poster from "@/src/components/poster";
 
 export default function CrearEventoScreen() {
     const [movieName, setMovieName] = useState("");
@@ -14,7 +12,6 @@ export default function CrearEventoScreen() {
 
     const searchMovies = async () => {
         if (!movieName.trim()) return;
-
         setLoading(true);
         const result = await getMoviesByName(movieName);
         setMovies(result.filter(movie => movie.poster_path));
@@ -22,15 +19,14 @@ export default function CrearEventoScreen() {
     };
 
     const renderMovieItem = ({ item }: { item: any }) => {
-        const imageUrl = `https://image.tmdb.org/t/p/w500${item.poster_path}`;
-
         return (
-            <TouchableOpacity style={styles.card}>
-                <Image
-                    source={{ uri: imageUrl }}
-                    style={styles.image}
-                />
-            </TouchableOpacity>
+            <Poster
+                id={item.id}
+                name={item.title}
+                description={item.overview}
+                imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                onPress={() => {}}
+            />
         );
     };
 
@@ -77,16 +73,5 @@ const styles = StyleSheet.create({
     row: {
         justifyContent: "space-between",
         marginBottom: 16,
-    },
-    card: {
-        width: ITEM_WIDTH,
-        aspectRatio: 2 / 3,
-        borderRadius: 8,
-        overflow: "hidden",
-        backgroundColor: "#eee",
-    },
-    image: {
-        width: "100%",
-        height: "100%",
-    },
+    }
 });
