@@ -126,9 +126,9 @@ export default function CreateAccountScreen() {
             />
 
             <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
-            <Text style={styles.secondaryLink}>
-                ¿Ya tienes cuenta? Inicia sesión
-            </Text>
+                <Text style={styles.secondaryLink}>
+                    ¿Ya tienes cuenta? Inicia sesión
+                </Text>
             </TouchableOpacity>
             
         </View>
