@@ -1,4 +1,5 @@
 import { 
+    TouchableOpacity,
     View, 
     Text, 
     Image, 
@@ -47,10 +48,12 @@ export default function Billboard() {
                 contentContainerStyle={styles.listContent}
                 columnWrapperStyle={styles.row}
                 renderItem={({ item }) => (
-                    <Image
-                        source={{ uri: item }}
-                        style={styles.image}
-                    />
+                    <TouchableOpacity activeOpacity={0.7}>
+                        <Image
+                            source={{ uri: item }}
+                            style={styles.image}
+                        />
+                    </TouchableOpacity>
                 )}
             />
         </View>
