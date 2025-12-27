@@ -1,6 +1,16 @@
-import { View, Text, Image, FlatList } from "react-native";
+import { 
+    View, 
+    Text, 
+    Image, 
+    FlatList, 
+    StyleSheet, 
+    Dimensions 
+} from "react-native";
 import { useEffect, useState } from "react";
 import { getImageUrl, getPopularMoviesIds } from "../services/TMDB";
+
+const { width } = Dimensions.get("window");
+const ITEM_WIDTH = width / 3 - 24;
 
 export default function Billboard() {
     const [images, setImages] = useState<string[]>([]);
@@ -9,11 +19,7 @@ export default function Billboard() {
     useEffect(() => {
         async function loadBillboard() {
             const ids = await getPopularMoviesIds();
-
-            const urls = await Promise.all(
-                ids.map((id) => getImageUrl(id))
-            );
-
+            const urls = await Promise.all(ids.map(id => getImageUrl(id)));
             setImages(urls.filter(Boolean));
             setLoading(false);
         }
@@ -23,35 +29,64 @@ export default function Billboard() {
 
     if (loading) {
         return (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <Text>Loading billboard...</Text>
+            <View style={styles.loadingContainer}>
+                <Text style={styles.loadingText}>Loading billboard...</Text>
             </View>
         );
     }
 
     return (
-        <View>
-            <Text style={{ fontSize: 18, fontWeight: "bold", margin: 16 }}>
-                Billboard
-            </Text>
+        <View style={styles.container}>
+            <Text style={styles.title}>Billboard</Text>
 
             <FlatList
                 data={images}
-                keyExtractor={(item, index) => index.toString()}
-                horizontal
-                showsHorizontalScrollIndicator={false}
+                keyExtractor={(_, index) => index.toString()}
+                numColumns={3}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.listContent}
+                columnWrapperStyle={styles.row}
                 renderItem={({ item }) => (
                     <Image
                         source={{ uri: item }}
-                        style={{
-                            width: 120,
-                            height: 180,
-                            borderRadius: 12,
-                            marginHorizontal: 8,
-                        }}
+                        style={styles.image}
                     />
                 )}
             />
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        margin: 16,
+    },
+    listContent: {
+        paddingHorizontal: 12,
+        paddingBottom: 16,
+    },
+    row: {
+        justifyContent: "space-between",
+    },
+    image: {
+        width: ITEM_WIDTH,
+        height: ITEM_WIDTH * 1.5,
+        borderRadius: 12,
+        marginBottom: 16,
+        backgroundColor: "#e1e1e1",
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    loadingText: {
+        fontSize: 14,
+        color: "#999",
+    },
+});

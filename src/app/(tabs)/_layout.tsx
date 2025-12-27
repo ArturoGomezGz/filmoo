@@ -14,12 +14,19 @@ export default function Layout() {
                     },
                     headerTitleAlign: "center",
                 }}
-            >
+            >   
                 <Tabs.Screen
                     name="billboard/index"
                     options={{
                         title: "Cartelera",
                         tabBarLabel: "Cartelera"
+                    }}
+                />
+                <Tabs.Screen
+                    name="crearEvento/index"
+                    options={{
+                        title: "Crear Evento",
+                        tabBarLabel: "Crear Evento"
                     }}
                 />
                 <Tabs.Screen
