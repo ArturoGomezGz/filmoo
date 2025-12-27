@@ -1,8 +1,9 @@
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import { useState } from "react";
 import Input from "../../../components/input";
 import PrimaryButton from "../../../components/buttons/primaryButton";
 import { getMoviesByName } from "@/src/services/TMDB";
+import { imageBaseURL, defaultImageSize } from "@/src/services/TMDB";
 import Poster from "@/src/components/poster";
 
 export default function CrearEventoScreen() {
@@ -24,7 +25,7 @@ export default function CrearEventoScreen() {
                 id={item.id}
                 name={item.title}
                 description={item.overview}
-                imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                imageUrl={`${imageBaseURL}/${defaultImageSize}${item.poster_path}`}
                 onPress={() => {}}
             />
         );

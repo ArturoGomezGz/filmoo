@@ -1,27 +1,25 @@
-import { 
-    TouchableOpacity,
-    View, 
-    Text, 
-    Image, 
-    FlatList, 
-    StyleSheet, 
-    Dimensions 
+import {
+    View,
+    Text,
+    FlatList,
+    StyleSheet,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { getImageUrl, getPopularMoviesIds, getPopularMovies } from "../services/TMDB";
+import { getPopularMovies } from "../services/TMDB";
+import { imageBaseURL, defaultImageSize } from "@/src/services/TMDB";
 import Poster from "./poster";
 
-const { width } = Dimensions.get("window");
-const ITEM_WIDTH = width / 3 - 24;
-
 export default function Billboard() {
-    const [images, setImages] = useState<string[]>([]);
-    const [loading, setLoading] = useState(true);
     const [movies, setMovies] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const searchMovies = async () => {
+    const loadMovies = async () => {
+        setLoading(true);
         const result = await getPopularMovies();
-        setMovies(result);
+
+        // mismo filtro que en CrearEvento
+        setMovies(result.filter(movie => movie.poster_path));
+        setLoading(false);
     };
 
     const renderMovieItem = ({ item }: { item: any }) => {
@@ -30,21 +28,14 @@ export default function Billboard() {
                 id={item.id}
                 name={item.title}
                 description={item.overview}
-                imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                imageUrl={`${imageBaseURL}/${defaultImageSize}${item.poster_path}`}
                 onPress={() => {}}
             />
         );
     };
 
     useEffect(() => {
-        async function loadBillboard() {
-            const ids = await getPopularMoviesIds();
-            const urls = await Promise.all(ids.map(id => getImageUrl(id)));
-            setImages(urls.filter(Boolean));
-            setLoading(false);
-        }
-
-        loadBillboard();
+        loadMovies();
     }, []);
 
     if (loading) {
@@ -60,20 +51,13 @@ export default function Billboard() {
             <Text style={styles.title}>Billboard</Text>
 
             <FlatList
-                data={images}
-                keyExtractor={(_, index) => index.toString()}
+                data={movies}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderMovieItem}
                 numColumns={3}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.listContent}
                 columnWrapperStyle={styles.row}
-                renderItem={({ item }) => (
-                    <TouchableOpacity activeOpacity={0.7}>
-                        <Image
-                            source={{ uri: item }}
-                            style={styles.image}
-                        />
-                    </TouchableOpacity>
-                )}
+                contentContainerStyle={styles.list}
+                showsVerticalScrollIndicator={false}
             />
         </View>
     );
@@ -86,21 +70,17 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 18,
         fontWeight: "bold",
-        margin: 16,
+        marginHorizontal: 16,
+        marginTop: 16,
     },
-    listContent: {
+    list: {
         paddingHorizontal: 12,
-        paddingBottom: 16,
+        paddingTop: 16,
+        paddingBottom: 40,
     },
     row: {
         justifyContent: "space-between",
-    },
-    image: {
-        width: ITEM_WIDTH,
-        height: ITEM_WIDTH * 1.5,
-        borderRadius: 12,
         marginBottom: 16,
-        backgroundColor: "#e1e1e1",
     },
     loadingContainer: {
         flex: 1,
