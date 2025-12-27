@@ -3,8 +3,7 @@ import { useState } from "react";
 import Input from "../../../components/input";
 import PrimaryButton from "../../../components/buttons/primaryButton";
 import { getMoviesByName } from "@/src/services/TMDB";
-import { imageBaseURL, defaultImageSize } from "@/src/services/TMDB";
-import Poster from "@/src/components/poster";
+import Poster from "../../../components/poster";
 
 export default function CrearEventoScreen() {
     const [movieName, setMovieName] = useState("");
@@ -13,22 +12,11 @@ export default function CrearEventoScreen() {
 
     const searchMovies = async () => {
         if (!movieName.trim()) return;
+
         setLoading(true);
         const result = await getMoviesByName(movieName);
-        setMovies(result.filter(movie => movie.poster_path));
+        setMovies(result.filter(m => m.poster_path));
         setLoading(false);
-    };
-
-    const renderMovieItem = ({ item }: { item: any }) => {
-        return (
-            <Poster
-                id={item.id}
-                name={item.title}
-                description={item.overview}
-                imageUrl={`${imageBaseURL}/${defaultImageSize}${item.poster_path}`}
-                onPress={() => {}}
-            />
-        );
     };
 
     return (
@@ -50,10 +38,17 @@ export default function CrearEventoScreen() {
             <FlatList
                 data={movies}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={renderMovieItem}
                 numColumns={3}
                 columnWrapperStyle={styles.row}
                 contentContainerStyle={styles.list}
+                renderItem={({ item }) => (
+                    <Poster
+                        id={item.id}
+                        name={item.title}
+                        description={item.overview}
+                        imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                    />
+                )}
                 showsVerticalScrollIndicator={false}
             />
         </View>
@@ -74,5 +69,5 @@ const styles = StyleSheet.create({
     row: {
         justifyContent: "space-between",
         marginBottom: 16,
-    }
+    },
 });
