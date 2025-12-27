@@ -13,6 +13,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../services/firebase";
 // Made components
 import Input  from "../../../components/input";
+import PrimaryButton from "../../../components/buttons/primaryButton";
+import SecondaryButton from "@/src/components/buttons/secondaryButton";
 
 export default function LoginScreen() {
     const [email, setEmail] = useState("");
@@ -95,27 +97,19 @@ export default function LoginScreen() {
 
             <TouchableOpacity onPress={handleForgotPassword}>
             <Text style={styles.forgotLink}>¿Olvidaste tu contraseña?</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> 
 
-            <TouchableOpacity
-            style={[
-                styles.primaryButton,
-                loading && { opacity: 0.6 },
-            ]}
-            onPress={handleLogin}
-            disabled={loading}
-            >
-            <Text style={styles.primaryButtonText}>
-                {loading ? "Ingresando..." : "Iniciar sesión"}
-            </Text>
-            </TouchableOpacity>
+            <PrimaryButton
+                label="Iniciar sesión"
+                loadingLabel="Ingresando..."
+                loading={loading}
+                onClick={handleLogin}
+            />
 
-            <TouchableOpacity
-            style={styles.secondaryButton}
-            onPress={handleCreateAccount}
-            >
-            <Text style={styles.secondaryButtonText}>Crear cuenta</Text>
-            </TouchableOpacity>
+            <SecondaryButton
+                label="Crear cuenta"
+                onClick={handleCreateAccount}
+            />
 
             <TouchableOpacity onPress={handleGuestLogin}>
             <Text style={styles.guestLink}>Entrar como invitado</Text>
