@@ -26,11 +26,6 @@ export const styles = StyleSheet.create({
   inputContainer: {
     marginBottom: 26,
   },
-  label: {
-    fontSize: 12,
-    color: "#999",
-    marginBottom: 6,
-  },
   input: {
     borderBottomWidth: 1,
     borderColor: "#ccc",
@@ -43,26 +38,6 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     color: "#555",
     marginBottom: 20,
-  },
-  primaryButton: {
-    backgroundColor: "#000",
-    paddingVertical: 14,
-    borderRadius: 6,
-    alignItems: "center",
-  },
-  primaryButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  secondaryButton: {
-    marginTop: 14,
-    alignItems: "center",
-  },
-  secondaryButtonText: {
-    color: "#000",
-    fontSize: 15,
-    fontWeight: "500",
   },
   guestLink: {
     marginTop: 18,
