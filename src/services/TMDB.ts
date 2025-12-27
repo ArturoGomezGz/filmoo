@@ -1,5 +1,5 @@
 const baseURL = "https://api.themoviedb.org/3";
-const imageBaseURL = "https://image.tmdb.org/t/p/";
+const imageBaseURL = "https://image.tmdb.org/t/p";
 
 async function verifyTMDBConnection(): Promise<boolean> {
     try {
@@ -87,4 +87,42 @@ async function getPopularMoviesIds(page: number = 1): Promise<number[]> {
     }
 }
 
-export { verifyTMDBConnection, getImageUrl, getPopularMoviesIds };
+async function getMoviesByName(name: string): Promise<any[]> {
+    try {
+        const apiKey = process.env.EXPO_PUBLIC_TMDB_API_KEY;
+        const response = await fetch(
+            `${baseURL}/search/movie?query=${name}&include_adult=false&language=es-MX&page=1`,
+            {
+                method: "GET",
+                headers: {
+                    accept: "application/json",
+                    Authorization: `Bearer ${apiKey}`
+                },
+            });
+
+        if (!response.ok) {
+            console.error("Failed to fetch movie by name:", response.status);
+            return [];
+        }
+        const json = await response.json();
+        return json.results || [];
+    } catch (error) {
+        console.error("Error fetching movie by name:", error);
+        return [];
+    }
+}
+
+async function getMoviesPostersByName(name: string, size: string = "w500"): Promise<string[]> {
+    const movies = await getMoviesByName(name);
+    const posterUrls = await Promise.all(
+        movies.map(async (movie) => {
+            const imageUrl = movie.poster_path
+                ? `${imageBaseURL}${size}${movie.poster_path}`
+                : '';
+            return imageUrl;
+        })
+    );
+    return posterUrls.filter(url => url !== '');
+}
+
+export { verifyTMDBConnection, getImageUrl, getPopularMoviesIds, getMoviesByName, getMoviesPostersByName };
