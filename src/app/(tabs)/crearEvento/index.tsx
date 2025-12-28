@@ -21,19 +21,23 @@ export default function CrearEventoScreen() {
 
     return (
         <View style={styles.container}>
-            <Input
-                placeholder="Selecciona una película"
-                name="Película"
-                secureTextEntry={false}
-                value={movieName}
-                onChangeText={setMovieName}
-            />
+            <View style={{marginBottom: 20}}>
+                <Input
+                    placeholder="Busca una película"
+                    name="Cuéntanos qué película te gustaría ver..."
+                    secureTextEntry={false}
+                    value={movieName}
+                    onChangeText={setMovieName}
+                />
+            
+                <PrimaryButton
+                    onClick={searchMovies}
+                    label="Buscar Película"
+                    loading={loading}
+                />
+            </View>
 
-            <PrimaryButton
-                onClick={searchMovies}
-                label="Buscar Película"
-                loading={loading}
-            />
+
 
             <FlatList
                 data={movies}

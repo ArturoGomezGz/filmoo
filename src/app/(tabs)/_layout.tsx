@@ -25,7 +25,7 @@ export default function Layout() {
                 <Tabs.Screen
                     name="crearEvento/index"
                     options={{
-                        title: "Crear Evento",
+                        title: "Crea un nuevo evento",
                         tabBarLabel: "Crear Evento"
                     }}
                 />
