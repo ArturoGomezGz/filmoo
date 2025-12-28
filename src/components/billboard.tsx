@@ -29,6 +29,10 @@ export default function Billboard() {
     return (
         <View style={styles.container}>
 
+            <Text style={styles.mainTitle}>
+                Cartelera
+            </Text>
+
             <FlatList
                 data={movies}
                 keyExtractor={(item) => item.id.toString()}
@@ -53,6 +57,14 @@ export default function Billboard() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    mainTitle: {
+        color: "black",
+        fontSize: 24,
+        fontWeight: "bold",
+        fontFamily: "System",
+        textAlign: "center",
+        marginVertical: 16,
     },
     list: {
         paddingHorizontal: 12,

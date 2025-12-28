@@ -6,7 +6,7 @@ export default function Layout() {
         <SafeAreaView style={{ flex: 1, backgroundColor: "#000000ff" }}>
             <Tabs
                 screenOptions={{
-                    headerShown: true,
+                    headerShown: false,
                     tabBarActiveTintColor: "white",
                     tabBarStyle: { 
                         backgroundColor: "#121212",
