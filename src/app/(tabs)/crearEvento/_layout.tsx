@@ -3,31 +3,20 @@ import { Stack } from "expo-router";
 export default function CrearEventoLayout() {
     return (
         <Stack
-        screenOptions={{
-            headerTitleAlign: "center",
-            animation: "fade_from_bottom",
-        }}
+            screenOptions={{
+                headerTitle: "Crear evento",
+                headerTitleAlign: "center",
+                animation: "fade_from_bottom",
+            }}
         >
-        <Stack.Screen
-            name="index"
-            options={{ headerShown: false }}
-        />
-        <Stack.Screen
-            name="pelicula"
-            options={{ title: "Selecciona tu película" }}
-        />
-        <Stack.Screen
-            name="horario"
-            options={{ title: "Selecciona tu horario" }}
-        />
-        <Stack.Screen
-            name="ubicacion"
-            options={{ title: "Selecciona tu cine" }}
-        />
-        <Stack.Screen
-            name="comprar"
-            options={{ title: "Compra tu boleto" }}
-        />
+            <Stack.Screen
+                name="index"
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen name="pelicula" />
+            <Stack.Screen name="horario" />
+            <Stack.Screen name="ubicacion" />
+            <Stack.Screen name="comprar" />
         </Stack>
     );
 }
