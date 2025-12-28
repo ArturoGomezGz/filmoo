@@ -5,12 +5,12 @@ export default function CrearEventoLayout() {
         <Stack
         screenOptions={{
             headerTitleAlign: "center",
-            animation: "slide_from_right",
+            animation: "fade_from_bottom",
         }}
         >
         <Stack.Screen
             name="index"
-            options={{ title: "Crear evento" }}
+            options={{ headerShown: false }}
         />
         <Stack.Screen
             name="pelicula"
