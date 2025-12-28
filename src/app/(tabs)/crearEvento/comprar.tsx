@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     ScrollView,
 } from "react-native";
+import { router } from "expo-router";
 
 export default function ComprarScreen() {
     return (
@@ -55,7 +56,7 @@ export default function ComprarScreen() {
 
             {/* Footer */}
             <View style={styles.footer}>
-                <TouchableOpacity style={styles.primaryButton}>
+                <TouchableOpacity onPress={() => {router.replace("/(tabs)/crearEvento")}} style={styles.primaryButton}>
                     <Text style={styles.primaryButtonText}>Finalizar compra</Text>
                 </TouchableOpacity>
             </View>
