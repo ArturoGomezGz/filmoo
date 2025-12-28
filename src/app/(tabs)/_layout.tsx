@@ -14,29 +14,7 @@ export default function Layout() {
                     },
                     headerTitleAlign: "center",
                 }}
-            >   
-                <Tabs.Screen
-                    name="billboard/index"
-                    options={{
-                        title: "Cartelera",
-                        tabBarLabel: "Cartelera"
-                    }}
-                />
-                <Tabs.Screen
-                    name="crearEvento/index"
-                    options={{
-                        title: "Crea un nuevo evento",
-                        tabBarLabel: "Crear Evento"
-                    }}
-                />
-                <Tabs.Screen
-                    name="profile/index"
-                    options={{
-                        title: "Perfil",
-                        tabBarLabel: "Perfil"
-                    }}
-                />
-            </Tabs>
+            />
         </SafeAreaView>
     );
 }
