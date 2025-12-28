@@ -13,20 +13,20 @@ export default function CrearEventoLayout() {
             options={{ title: "Crear evento" }}
         />
         <Stack.Screen
-            name="peliculas"
-            options={{ title: "Paso 1" }}
+            name="pelicula"
+            options={{ title: "Selecciona tu película" }}
         />
         <Stack.Screen
-            name="paso-2"
-            options={{ title: "Paso 2" }}
+            name="horario"
+            options={{ title: "Selecciona tu horario" }}
         />
         <Stack.Screen
-            name="paso-3"
-            options={{ title: "Paso 3" }}
+            name="ubicacion"
+            options={{ title: "Selecciona tu cine" }}
         />
         <Stack.Screen
-            name="resumen"
-            options={{ title: "Resumen" }}
+            name="comprar"
+            options={{ title: "Compra tu boleto" }}
         />
         </Stack>
     );
