@@ -7,6 +7,7 @@ import {
     ScrollView,
 } from "react-native";
 import { router } from "expo-router";
+import { useCrearEvento } from "./CrearEventoContext";
 
 type Cine = {
     id: string;
@@ -15,7 +16,16 @@ type Cine = {
 };
 
 export default function UbicacionScreen() {
+    const { setCineId } = useCrearEvento();
+
     const [selectedCine, setSelectedCine] = useState<string | null>(null);
+
+    const handleContinuar = () => {
+        if (selectedCine) {
+            setCineId(selectedCine);
+            router.push("/(tabs)/crearEvento/comprar");
+        }
+    };
 
     const cines: Cine[] = [
         {
@@ -57,7 +67,7 @@ export default function UbicacionScreen() {
                                     styles.card,
                                     selected && styles.cardSelected,
                                 ]}
-                                onPress={() => setSelectedCine(cine.id)}
+                                onPress={handleContinuar}
                             >
                                 <Text
                                     style={[
@@ -84,7 +94,7 @@ export default function UbicacionScreen() {
             </ScrollView>
 
             <View style={styles.footer}>
-                <TouchableOpacity onPress={() => router.push("/(tabs)/crearEvento/comprar")} style={styles.primaryButton}>
+                <TouchableOpacity onPress={() => {console.log("Continuar pressed"); router.push("/(tabs)/crearEvento/comprar")}} style={styles.primaryButton}>
                     <Text style={styles.primaryButtonText}>Continuar</Text>
                 </TouchableOpacity>
             </View>

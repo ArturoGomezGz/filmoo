@@ -1,63 +1,137 @@
+import { useState } from "react";
 import {
     View,
     Text,
     StyleSheet,
     TouchableOpacity,
     ScrollView,
+    Platform,
+    Alert,
 } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
+import { useCrearEvento } from "./CrearEventoContext";
 
-export default function ComprarScreen() {
+export default function HorarioScreen() {
+    const { setFecha, setHora } = useCrearEvento();
+
+    const [date, setDate] = useState<Date | null>(
+        Platform.OS === "web" ? new Date() : null
+    );
+    const [showPicker, setShowPicker] = useState(false);
+    const [selectedTime, setSelectedTime] = useState<string | null>(null);
+
+    const times = [
+        "10:00", "10:30", "11:00", "11:30",
+        "12:00", "12:30", "13:00", "13:30",
+        "14:00", "14:30", "15:00", "15:30",
+    ];
+
+    const handleContinuar = () => {
+        if (!date || !selectedTime) {
+            Alert.alert(
+                "Información incompleta",
+                "Selecciona una fecha y una hora para continuar."
+            );
+            return;
+        }
+
+        setFecha(date.toISOString().split("T")[0]);
+        setHora(selectedTime);
+
+        router.push("/(tabs)/crearEvento/ubicacion");
+    };
+
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.content}>
 
                 <View style={styles.header}>
-                    <Text style={styles.title}>Sé el primero</Text>
+                    <Text style={styles.title}>Selecciona el horario</Text>
                     <Text style={styles.subtitle}>
-                        Para completar tu película debes poner el ejemplo, ¡sé el primero en comprar tu boleto!
+                        Elige la fecha y la hora en la que se realizará la función.
                     </Text>
                 </View>
 
-                {/* Resumen */}
+                {/* Fecha */}
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Resumen</Text>
+                    <Text style={styles.sectionTitle}>Fecha</Text>
 
-                    <View style={styles.summaryCard}>
-                        <Text style={styles.summaryItem}>🎬 Película seleccionada</Text>
-                        <Text style={styles.summaryItem}>📍 Cine seleccionado</Text>
-                        <Text style={styles.summaryItem}>🕒 Fecha y hora elegidas</Text>
-                    </View>
-                </View>
-
-                {/* Método de pago */}
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Método de pago</Text>
-
-                    <View style={styles.paymentCard}>
-                        <Text style={styles.paymentTitle}>Tarjeta de crédito</Text>
-                        <Text style={styles.paymentSubtitle}>
-                            **** **** **** 1234
+                    <TouchableOpacity
+                        style={styles.dateSelector}
+                        activeOpacity={Platform.OS === "web" ? 1 : 0.7}
+                        onPress={() => {
+                            if (Platform.OS !== "web") {
+                                setShowPicker(true);
+                            }
+                        }}
+                    >
+                        <Text style={styles.dateText}>
+                            {date
+                                ? date.toLocaleDateString()
+                                : Platform.OS === "web"
+                                    ? "Fecha automática (hoy)"
+                                    : "Seleccionar fecha"}
                         </Text>
-                    </View>
+                    </TouchableOpacity>
+
+                    {showPicker && Platform.OS !== "web" && (
+                        <DateTimePicker
+                            value={date ?? new Date()}
+                            mode="date"
+                            display={Platform.OS === "ios" ? "spinner" : "default"}
+                            onChange={(_, selectedDate) => {
+                                setShowPicker(false);
+                                if (selectedDate) setDate(selectedDate);
+                            }}
+                        />
+                    )}
                 </View>
 
-                {/* Total */}
+                {/* Hora */}
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Total</Text>
+                    <Text style={styles.sectionTitle}>Hora</Text>
 
-                    <View style={styles.totalRow}>
-                        <Text style={styles.totalLabel}>Boleto</Text>
-                        <Text style={styles.totalAmount}>$120.00 MXN</Text>
+                    <View style={styles.timeGrid}>
+                        {times.map(time => {
+                            const selected = selectedTime === time;
+
+                            return (
+                                <TouchableOpacity
+                                    key={time}
+                                    style={[
+                                        styles.timeSlot,
+                                        selected && styles.timeSlotSelected,
+                                    ]}
+                                    onPress={() => setSelectedTime(time)}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.timeText,
+                                            selected && styles.timeTextSelected,
+                                        ]}
+                                    >
+                                        {time}
+                                    </Text>
+                                </TouchableOpacity>
+                            );
+                        })}
                     </View>
+
+                    <Text style={styles.helperText}>
+                        Las funciones comienzan cada 30 minutos
+                    </Text>
                 </View>
 
             </ScrollView>
 
             {/* Footer */}
             <View style={styles.footer}>
-                <TouchableOpacity onPress={() => {router.replace("/(tabs)/crearEvento")}} style={styles.primaryButton}>
-                    <Text style={styles.primaryButtonText}>Finalizar compra</Text>
+                <TouchableOpacity
+                    style={styles.primaryButton}
+                    onPress={handleContinuar}
+                >
+                    <Text style={styles.primaryButtonText}>Continuar</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -74,7 +148,6 @@ const styles = StyleSheet.create({
         padding: 24,
         paddingBottom: 120,
     },
-
     header: {
         marginBottom: 32,
     },
@@ -89,7 +162,6 @@ const styles = StyleSheet.create({
         color: "#666",
         lineHeight: 20,
     },
-
     section: {
         marginBottom: 32,
     },
@@ -99,54 +171,50 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         color: "#111",
     },
-
-    summaryCard: {
-        padding: 16,
-        borderRadius: 10,
+    dateSelector: {
+        height: 48,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: "#ddd",
-        gap: 8,
+        justifyContent: "center",
+        paddingHorizontal: 16,
     },
-    summaryItem: {
+    dateText: {
         fontSize: 14,
         color: "#333",
     },
-
-    paymentCard: {
-        padding: 16,
-        borderRadius: 10,
+    timeGrid: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        gap: 12,
+    },
+    timeSlot: {
+        width: "30%",
+        height: 42,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: "#ddd",
-    },
-    paymentTitle: {
-        fontSize: 15,
-        fontWeight: "500",
-        marginBottom: 4,
-        color: "#111",
-    },
-    paymentSubtitle: {
-        fontSize: 13,
-        color: "#666",
-    },
-
-    totalRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
-        paddingVertical: 12,
-        borderTopWidth: 1,
-        borderTopColor: "#eee",
+        backgroundColor: "#fff",
     },
-    totalLabel: {
-        fontSize: 15,
+    timeSlotSelected: {
+        backgroundColor: "#121212",
+        borderColor: "#121212",
+    },
+    timeText: {
+        fontSize: 13,
         color: "#333",
     },
-    totalAmount: {
-        fontSize: 18,
-        fontWeight: "600",
-        color: "#111",
+    timeTextSelected: {
+        color: "#fff",
+        fontWeight: "500",
     },
-
+    helperText: {
+        marginTop: 12,
+        fontSize: 12,
+        color: "#888",
+    },
     footer: {
         position: "absolute",
         bottom: 0,

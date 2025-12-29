@@ -5,11 +5,19 @@ import PrimaryButton from "../../../components/buttons/primaryButton";
 import { getMoviesByName } from "@/src/services/TMDB";
 import Poster from "../../../components/poster";
 import { router } from "expo-router";
+import { useCrearEvento } from "./CrearEventoContext";
 
 export default function SeleccionarPeliculaView() {
+    const { setPeliculaId } = useCrearEvento();
+
     const [movieName, setMovieName] = useState("");
     const [movies, setMovies] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
+
+    const handleSelectMovie = (movieId: number) => {
+        setPeliculaId(movieId);
+        router.push("/(tabs)/crearEvento/horario");
+    };
 
     const searchMovies = async () => {
         if (!movieName.trim()) return;
@@ -69,9 +77,7 @@ export default function SeleccionarPeliculaView() {
                         name={item.title}
                         description={item.overview}
                         imageUrl={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                        onSelect={() => {
-                            router.push("/(tabs)/crearEvento/horario");
-                        }}
+                        onSelect={() => { handleSelectMovie(item.id) }}
                     />
                 )}
                 showsVerticalScrollIndicator={false}

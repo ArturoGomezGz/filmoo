@@ -6,11 +6,15 @@ import {
     TouchableOpacity,
     ScrollView,
     Platform,
+    Alert,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
+import { useCrearEvento } from "./CrearEventoContext";
 
 export default function HorarioScreen() {
+    const { setFecha, setHora } = useCrearEvento();
+
     const [date, setDate] = useState<Date | null>(null);
     const [showPicker, setShowPicker] = useState(false);
     const [selectedTime, setSelectedTime] = useState<string | null>(null);
@@ -20,6 +24,21 @@ export default function HorarioScreen() {
         "12:00", "12:30", "13:00", "13:30",
         "14:00", "14:30", "15:00", "15:30",
     ];
+
+    const handleContinuar = () => {
+        if (!date || !selectedTime) {
+            Alert.alert(
+                "Información incompleta",
+                "Selecciona una fecha y una hora para continuar."
+            );
+            return;
+        }
+
+        setFecha(date.toISOString().split("T")[0]); // YYYY-MM-DD
+        setHora(selectedTime);
+
+        router.push("/(tabs)/crearEvento/ubicacion");
+    };
 
     return (
         <View style={styles.container}>
@@ -96,7 +115,10 @@ export default function HorarioScreen() {
             </ScrollView>
 
             <View style={styles.footer}>
-                <TouchableOpacity onPress={() => router.push("/(tabs)/crearEvento/ubicacion")} style={styles.primaryButton}>
+                <TouchableOpacity
+                    style={styles.primaryButton}
+                    onPress={handleContinuar}
+                >
                     <Text style={styles.primaryButtonText}>Continuar</Text>
                 </TouchableOpacity>
             </View>

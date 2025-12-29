@@ -1,8 +1,16 @@
 import { View, Text, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import PrimaryButton from "@/src/components/buttons/primaryButton";
+import { useCrearEvento } from "./CrearEventoContext";
 
 export default function CrearEventoScreen() {
+    const { resetEvento } = useCrearEvento();
+
+    const handleComenzar = () => {
+        resetEvento();
+        router.push("/(tabs)/crearEvento/pelicula");
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.content}>
@@ -21,7 +29,7 @@ export default function CrearEventoScreen() {
             <View style={styles.footer}>
                 <PrimaryButton
                 label="Empezar"
-                onClick={() => router.push("/(tabs)/crearEvento/pelicula")}
+                onClick={handleComenzar}
                 loading={false}
                 />
             </View>
