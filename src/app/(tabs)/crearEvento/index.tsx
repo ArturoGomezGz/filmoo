@@ -5,26 +5,26 @@ import PrimaryButton from "@/src/components/buttons/primaryButton";
 export default function CrearEventoScreen() {
     return (
         <View style={styles.container}>
-        <View style={styles.content}>
-            <Text style={styles.emoji}>🎬</Text>
+            <View style={styles.content}>
+                <Text style={styles.emoji}>🎬</Text>
 
-            <Text style={styles.mainText}>
-            Vamos a crear un nuevo evento
-            </Text>
+                <Text style={styles.mainText}>
+                Vamos a crear un nuevo evento
+                </Text>
 
-            <Text style={styles.secondaryText}>
-            Te guiaremos paso a paso para seleccionar la película,
-            definir la fecha y agregar los detalles necesarios.
-            </Text>
-        </View>
+                <Text style={styles.secondaryText}>
+                Te guiaremos paso a paso para seleccionar la película,
+                definir la fecha y agregar los detalles necesarios.
+                </Text>
+            </View>
 
-        <View style={styles.footer}>
-            <PrimaryButton
-            label="Empezar"
-            onClick={() => router.push("/(tabs)/crearEvento/pelicula")}
-            loading={false}
-            />
-        </View>
+            <View style={styles.footer}>
+                <PrimaryButton
+                label="Empezar"
+                onClick={() => router.push("/(tabs)/crearEvento/pelicula")}
+                loading={false}
+                />
+            </View>
         </View>
     );
 }
