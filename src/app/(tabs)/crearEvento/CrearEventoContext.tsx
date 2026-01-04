@@ -20,7 +20,7 @@ const CrearEventoContext = createContext<CrearEventoContextType | undefined>(
     undefined
 );
 
-export function CrearEventoProvider({ children }: { children: React.ReactNode }) {
+export default function CrearEventoProvider({ children }: { children: React.ReactNode }) {
     const [evento, setEvento] = useState<Evento>({});
 
     const setPeliculaId = (id: number) => {
