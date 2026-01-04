@@ -1,0 +1,26 @@
+{
+  "uid": "",
+  "name": "",
+  "email": "",
+  "profilePicture": "",
+  "createdAt": "",
+  "shortBio": "",
+
+  "cinephileIdentity": {
+    "favoriteMovie": "",
+    "favoriteGenres": [],
+    "favoriteTVShow": "",
+    "favoriteDirector": "",
+    "favoriteActor": ""
+  },
+
+  "activity": {
+    "plansCreated": 0,
+    "ticketsPurchased": 0
+  },
+
+  "social": {
+    "followers": [],
+    "following": []
+  }
+}
