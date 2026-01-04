@@ -2,6 +2,9 @@ import { View, Text, StyleSheet } from "react-native";
 import { router } from "expo-router";
 import PrimaryButton from "@/src/components/buttons/primaryButton";
 import { useCrearEvento } from "./CrearEventoContext";
+import { Auth } from "firebase/auth";
+import { auth } from "@/src/services/firebase";
+import InvitacionCrearCuenta from "@/src/components/views/invitacionCrearCuenta";
 
 export default function CrearEventoScreen() {
     const { resetEvento } = useCrearEvento();
@@ -9,6 +12,15 @@ export default function CrearEventoScreen() {
     const handleComenzar = () => {
         resetEvento();
         router.push("/(tabs)/crearEvento/pelicula");
+    }
+
+    if (!auth.currentUser) {
+        return (
+            <View style={styles.centeredContainer}>
+                <InvitacionCrearCuenta />
+            </View>
+        );
+
     }
 
     return (
@@ -38,6 +50,13 @@ export default function CrearEventoScreen() {
 }
 
 const styles = StyleSheet.create({
+    centeredContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#ffffff",
+    },
+
     container: {
         flex: 1,
         paddingHorizontal: 24,

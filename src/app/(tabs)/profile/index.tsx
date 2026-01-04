@@ -9,6 +9,7 @@ import { useAuth } from "@/src/context/AuthContext";
 import { auth, db } from "@/src/services/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import InvitacionCrearCuenta from "@/src/components/views/invitacionCrearCuenta";
 import {
     ActivityIndicator,
     Image,
@@ -107,6 +108,14 @@ export default function ProfileScreen() {
         return (
             <View style={styles.loading}>
                 <ActivityIndicator size="small" />
+            </View>
+        );
+    }
+
+    if (!auth.currentUser) {
+        return (
+            <View style={styles.centeredContainer}>
+                <InvitacionCrearCuenta />
             </View>
         );
     }
@@ -241,6 +250,13 @@ export default function ProfileScreen() {
 /* ---------- Styles ---------- */
 
 const styles = StyleSheet.create({
+    centeredContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#ffffff",
+    },
+    
     container: {
         padding: 24,
         backgroundColor: "#ffffff"
