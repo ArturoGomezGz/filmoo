@@ -2,8 +2,11 @@ import { router } from "expo-router";
 import { View, Text, Button } from "react-native";
 import { signOut } from "firebase/auth";
 import { auth } from "../../../services/firebase";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function ProfileScreen() {
+    const { profile } = useAuth();
+
     const handleLogout = async () => {
         try {
         await signOut(auth);
@@ -18,6 +21,7 @@ export default function ProfileScreen() {
         <Text>Pantalla de Perfil</Text>
 
         <Button title="Cerrar sesión" onPress={handleLogout} />
+        <Button title="Ver la informaicon de mi perfil" onPress={() => {}} />
         </View>
     );
 }
