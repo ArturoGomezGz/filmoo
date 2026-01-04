@@ -1,9 +1,9 @@
-import { View, FlatList, StyleSheet } from "react-native";
-import { useState } from "react";
-import Input from "../../../components/input";
-import PrimaryButton from "../../../components/buttons/primaryButton";
+import PrimaryButton from "@/src/components/buttons/primaryButton";
+import Input from "@/src/components/input";
+import Poster from "@/src/components/poster";
 import { getMoviesByName } from "@/src/services/TMDB";
-import Poster from "../../../components/poster";
+import { useState } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 
 export default function SeleccionarPeliculaView() {
     const [movieName, setMovieName] = useState("");

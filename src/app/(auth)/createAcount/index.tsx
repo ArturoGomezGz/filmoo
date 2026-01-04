@@ -1,18 +1,18 @@
-import { useState } from "react";
-import {
-    StyleSheet,
-    View,
-    Text,
-    TouchableOpacity,
-    KeyboardAvoidingView,
-    Platform,
-} from "react-native";
+import { auth } from "@/src/services/firebase";
 import { router } from "expo-router";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../../../services/firebase";
+import { useState } from "react";
+import {
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 // Made components
-import Input from "../../../components/input";
-import PrimaryButton from "../../../components/buttons/primaryButton";
+import PrimaryButton from "@/src/components/buttons/primaryButton";
+import Input from "@/src/components/input";
 
 export default function CreateAccountScreen() {
     const [name, setName] = useState("");

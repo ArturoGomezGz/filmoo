@@ -1,16 +1,21 @@
-import {
-    View,
-    Text,
-    StyleSheet,
-    ScrollView,
-    TouchableOpacity,
-    Image,
-    ActivityIndicator,
-    TextInput
-} from "react-native";
+import PrimaryButton from "@/src/components/buttons/primaryButton";
+import SecondaryButton from "@/src/components/buttons/secondaryButton";
+import Input from "@/src/components/input";
+import ProfileBioInput from "@/src/components/profileBioInput";
+import ProfileNameInput from "@/src/components/profileNameInput";
+import ProfileStat from "@/src/components/profileStat";
+import { useAuth } from "@/src/context/AuthContext";
+import { auth } from "@/src/services/firebase";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../../context/AuthContext";
-import Input from "../../../components/input";
+import {
+    ActivityIndicator,
+    Image,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
+} from "react-native";
 
 export default function ProfileScreen() {
     const { profile, loading } = useAuth();
@@ -54,7 +59,7 @@ export default function ProfileScreen() {
             {/* Header */}
             <View style={styles.header}>
                 <Image
-                    source={require("../../../assets/images/profile.png")}
+                    source={require("@/src/assets/images/profile.png")}
                     style={styles.avatar}
                 />
 
@@ -69,13 +74,13 @@ export default function ProfileScreen() {
                     </Text>
                 </TouchableOpacity>
 
-                <NameInput
+                <ProfileNameInput
                     value={name}
                     onChangeText={setName}
                     editable={isEditing}
                 />
 
-                <BioInput
+                <ProfileBioInput
                     value={shortBio}
                     onChangeText={setShortBio}
                     editable={isEditing}
@@ -84,10 +89,10 @@ export default function ProfileScreen() {
 
             {/* Stats */}
             <View style={styles.stats}>
-                <Stat label="Seguidores" value={`${profile?.data()?.social?.followers?.length || 0}`} />
-                <Stat label="Siguiendo" value={`${profile?.data()?.social?.following?.length || 0}`} />
-                <Stat label="Planes creados" value={`${profile?.data()?.activity?.plansCreated || 0}`} />
-                <Stat label="Boletos comprados" value={`${profile?.data()?.activity?.ticketsPurchased || 0}`} />
+                <ProfileStat label="Seguidores" value={`${profile?.data()?.social?.followers?.length || 0}`} />
+                <ProfileStat label="Siguiendo" value={`${profile?.data()?.social?.following?.length || 0}`} />
+                <ProfileStat label="Planes creados" value={`${profile?.data()?.activity?.plansCreated || 0}`} />
+                <ProfileStat label="Boletos comprados" value={`${profile?.data()?.activity?.ticketsPurchased || 0}`} />
             </View>
 
             {/* Cinephile Identity */}
@@ -141,78 +146,22 @@ export default function ProfileScreen() {
             </View>
 
             {/* Action button */}
-            <TouchableOpacity
-                style={styles.actionButton}
-                onPress={() => setIsEditing(!isEditing)}
-            >
-                <Text style={styles.actionText}>
-                    {isEditing ? "Guardar cambios" : "Editar perfil"}
-                </Text>
-            </TouchableOpacity>
+            <PrimaryButton
+                label={isEditing ? "Guardar cambios" : "Editar perfil"}
+                onClick={() => {setIsEditing(!isEditing)}}
+                loading={false}
+            />
+
+            {/* Logout button */}
+            <SecondaryButton
+                label="Cerrar sesión"
+                onClick={() => {auth.signOut()}}
+            />
 
         </ScrollView>
     );
 }
 
-/* ---------- Specific Inputs ---------- */
-
-function NameInput({
-    value,
-    onChangeText,
-    editable
-}: {
-    value: string;
-    onChangeText: (text: string) => void;
-    editable: boolean;
-}) {
-    return (
-        <TextInput
-            value={value}
-            onChangeText={onChangeText}
-            editable={editable}
-            placeholder="Tu nombre"
-            placeholderTextColor="#999"
-            style={[
-                styles.nameInput,
-                !editable && styles.readOnly
-            ]}
-        />
-    );
-}
-
-function BioInput({
-    value,
-    onChangeText,
-    editable
-}: {
-    value: string;
-    onChangeText: (text: string) => void;
-    editable: boolean;
-}) {
-    return (
-        <TextInput
-            value={value}
-            onChangeText={onChangeText}
-            editable={editable}
-            placeholder="Escribe una breve descripción sobre tu amor por el cine"
-            placeholderTextColor="#999"
-            multiline
-            style={[
-                styles.bioInput,
-                !editable && styles.readOnly
-            ]}
-        />
-    );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-    return (
-        <View style={styles.statItem}>
-            <Text style={styles.statValue}>{value}</Text>
-            <Text style={styles.statLabel}>{label}</Text>
-        </View>
-    );
-}
 
 /* ---------- Styles ---------- */
 
@@ -246,41 +195,10 @@ const styles = StyleSheet.create({
         marginBottom: 16
     },
 
-    nameInput: {
-        fontSize: 20,
-        fontWeight: "500",
-        color: "#000000",
-        textAlign: "center",
-        marginBottom: 12
-    },
-
-    bioInput: {
-        fontSize: 14,
-        color: "#666666",
-        textAlign: "center",
-        marginBottom: 8
-    },
-
     stats: {
         flexDirection: "row",
         justifyContent: "space-between",
         marginBottom: 32
-    },
-
-    statItem: {
-        alignItems: "center",
-        flex: 1
-    },
-
-    statValue: {
-        fontSize: 16,
-        fontWeight: "500"
-    },
-
-    statLabel: {
-        fontSize: 12,
-        color: "#888888",
-        textAlign: "center"
     },
 
     section: {

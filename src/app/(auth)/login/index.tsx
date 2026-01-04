@@ -9,10 +9,10 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../services/firebase";
+import { auth } from "@/src/services/firebase";
 // Made components
-import Input  from "../../../components/input";
-import PrimaryButton from "../../../components/buttons/primaryButton";
+import Input  from "@/src/components/input";
+import PrimaryButton from "@/src/components/buttons/primaryButton";
 import SecondaryButton from "@/src/components/buttons/secondaryButton";
 
 export default function LoginScreen() {

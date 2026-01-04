@@ -1,10 +1,10 @@
-import { View, FlatList, StyleSheet, Text } from "react-native";
-import { useState } from "react";
-import Input from "../../../components/input";
-import PrimaryButton from "../../../components/buttons/primaryButton";
+import PrimaryButton from "@/src/components/buttons/primaryButton";
+import Input from "@/src/components/input";
+import Poster from "@/src/components/poster";
 import { getMoviesByName } from "@/src/services/TMDB";
-import Poster from "../../../components/poster";
 import { router } from "expo-router";
+import { useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useCrearEvento } from "./CrearEventoContext";
 
 export default function SeleccionarPeliculaView() {
