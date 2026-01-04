@@ -1,6 +1,11 @@
 import { auth } from "@/src/services/firebase";
+import { db } from "@/src/services/firebase";
 import { router } from "expo-router";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+    createUserWithEmailAndPassword,
+    updateProfile
+} from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import {
     KeyboardAvoidingView,
@@ -10,7 +15,8 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-// Made components
+
+// Components
 import PrimaryButton from "@/src/components/buttons/primaryButton";
 import Input from "@/src/components/input";
 
@@ -42,30 +48,42 @@ export default function CreateAccountScreen() {
             setLoading(true);
             setError(null);
 
+            // 1️⃣ Crear usuario en Auth
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
                 email.trim(),
                 password
             );
 
-            await updateProfile(userCredential.user, {
+            const user = userCredential.user;
+
+            // 2️⃣ Actualizar displayName en Auth
+            await updateProfile(user, {
                 displayName: name.trim(),
             });
 
+            // 3️⃣ Crear documento en Firestore usando UID
+            await setDoc(doc(db, "users", user.uid), {
+                name: name.trim(),
+                email: email.trim(),
+                createdAt: serverTimestamp()
+            });
+
+            // 4️⃣ Redirigir
             router.replace("/(tabs)/billboard");
         } catch (err: any) {
             switch (err.code) {
-            case "auth/email-already-in-use":
-                setError("Este correo ya está registrado");
-                break;
-            case "auth/invalid-email":
-                setError("Correo inválido");
-                break;
-            case "auth/weak-password":
-                setError("Contraseña muy débil");
-                break;
-            default:
-                setError("Error al crear la cuenta");
+                case "auth/email-already-in-use":
+                    setError("Este correo ya está registrado");
+                    break;
+                case "auth/invalid-email":
+                    setError("Correo inválido");
+                    break;
+                case "auth/weak-password":
+                    setError("Contraseña muy débil");
+                    break;
+                default:
+                    setError("Error al crear la cuenta");
             }
         } finally {
             setLoading(false);
@@ -74,66 +92,67 @@ export default function CreateAccountScreen() {
 
     return (
         <KeyboardAvoidingView
-        style={styles.wrapper}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+            style={styles.wrapper}
+            behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-        <View style={styles.container}>
-            <Text style={styles.title}>Crear cuenta</Text>
-            <Text style={styles.subtitle}>
-            Completa los datos para registrarte
-            </Text>
-
-            {error && <Text style={styles.errorText}>{error}</Text>}
-
-            <Input
-                name="Nombre completo"
-                placeholder="Tu nombre"
-                secureTextEntry={false}
-                value={name}
-                onChangeText={setName}
-            />
-
-            <Input
-                name="Correo electrónico"
-                placeholder="ejemplo@correo.com"
-                secureTextEntry={false}
-                value={email}
-                onChangeText={setEmail}
-            />
-
-            <Input
-                name="Contraseña"
-                placeholder="********"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}
-            />
-
-            <Input
-                name="Confirmar contraseña"
-                placeholder="********"
-                secureTextEntry={true}
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-            />
-
-            <PrimaryButton
-                label="Crear cuenta"
-                loadingLabel="Creando cuenta..."
-                loading={loading}
-                onClick={handleCreateAccount}
-            />
-
-            <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
-                <Text style={styles.secondaryLink}>
-                    ¿Ya tienes cuenta? Inicia sesión
+            <View style={styles.container}>
+                <Text style={styles.title}>Crear cuenta</Text>
+                <Text style={styles.subtitle}>
+                    Completa los datos para registrarte
                 </Text>
-            </TouchableOpacity>
-            
-        </View>
+
+                {error && <Text style={styles.errorText}>{error}</Text>}
+
+                <Input
+                    name="Nombre completo"
+                    placeholder="Tu nombre"
+                    secureTextEntry={false}
+                    value={name}
+                    onChangeText={setName}
+                />
+
+                <Input
+                    name="Correo electrónico"
+                    placeholder="ejemplo@correo.com"
+                    secureTextEntry={false}
+                    value={email}
+                    onChangeText={setEmail}
+                />
+
+                <Input
+                    name="Contraseña"
+                    placeholder="********"
+                    secureTextEntry={true}
+                    value={password}
+                    onChangeText={setPassword}
+                />
+
+                <Input
+                    name="Confirmar contraseña"
+                    placeholder="********"
+                    secureTextEntry={true}
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                />
+
+                <PrimaryButton
+                    label="Crear cuenta"
+                    loadingLabel="Creando cuenta..."
+                    loading={loading}
+                    onClick={handleCreateAccount}
+                />
+
+                <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
+                    <Text style={styles.secondaryLink}>
+                        ¿Ya tienes cuenta? Inicia sesión
+                    </Text>
+                </TouchableOpacity>
+            </View>
         </KeyboardAvoidingView>
     );
 }
+
+/* ---------- Styles ---------- */
 
 const styles = StyleSheet.create({
     wrapper: {
@@ -158,33 +177,6 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginBottom: 36,
     },
-    inputContainer: {
-        marginBottom: 26,
-    },
-    label: {
-        fontSize: 12,
-        color: "#999",
-        marginBottom: 6,
-    },
-    input: {
-        borderBottomWidth: 1,
-        borderColor: "#ccc",
-        paddingVertical: 10,
-        fontSize: 16,
-        color: "#000",
-    },
-    primaryButton: {
-        backgroundColor: "#000",
-        paddingVertical: 14,
-        borderRadius: 6,
-        alignItems: "center",
-        marginTop: 10,
-    },
-    primaryButtonText: {
-        color: "#fff",
-        fontSize: 16,
-        fontWeight: "600",
-    },
     secondaryLink: {
         marginTop: 20,
         textAlign: "center",
@@ -192,7 +184,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     errorText: {
-        color: "#E53935",          // rojo legible
+        color: "#E53935",
         fontSize: 13,
         textAlign: "center",
         marginBottom: 12,
