@@ -4,8 +4,10 @@ import Input from "@/src/components/input";
 import ProfileBioInput from "@/src/components/profileBioInput";
 import ProfileNameInput from "@/src/components/profileNameInput";
 import ProfileStat from "@/src/components/profileStat";
+import { router } from "expo-router";
 import { useAuth } from "@/src/context/AuthContext";
-import { auth } from "@/src/services/firebase";
+import { auth, db } from "@/src/services/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -20,6 +22,7 @@ import {
 export default function ProfileScreen() {
     const { profile, loading } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
+    const [saving, setSaving] = useState(false);
 
     const [name, setName] = useState("");
     const [shortBio, setShortBio] = useState("");
@@ -44,6 +47,61 @@ export default function ProfileScreen() {
             setFavoriteActor(data?.cinephileIdentity?.favoriteActor || "");
         }
     }, [profile]);
+
+    async function saveChanges() {
+        if (!profile) return;
+
+        try {
+            setSaving(true);
+
+            const userRef = doc(db, "users", profile.id);
+
+            const cleanedGenres = favoriteGenres
+                .split(",")
+                .map(g => g.trim())
+                .filter(Boolean);
+
+            const payload: any = {
+                name: name.trim(),
+                shortBio: shortBio.trim(),
+                cinephileIdentity: {
+                    favoriteMovie: favoriteMovie.trim(),
+                    favoriteGenres: cleanedGenres,
+                    favoriteTVShow: favoriteTVShow.trim(),
+                    favoriteDirector: favoriteDirector.trim(),
+                    favoriteActor: favoriteActor.trim()
+                }
+            };
+
+            // Limpieza de strings vacíos
+            if (!payload.name) delete payload.name;
+            if (!payload.shortBio) delete payload.shortBio;
+
+            Object.keys(payload.cinephileIdentity).forEach((key) => {
+                const value = payload.cinephileIdentity[key];
+
+                if (
+                    value === "" ||
+                    (Array.isArray(value) && value.length === 0)
+                ) {
+                    delete payload.cinephileIdentity[key];
+                }
+            });
+
+            if (Object.keys(payload.cinephileIdentity).length === 0) {
+                delete payload.cinephileIdentity;
+            }
+
+            await updateDoc(userRef, payload);
+
+            setIsEditing(false);
+            console.log("Perfil actualizado correctamente");
+        } catch (error) {
+            console.error("Error al guardar el perfil:", error);
+        } finally {
+            setSaving(false);
+        }
+    }
 
     if (loading) {
         return (
@@ -89,10 +147,22 @@ export default function ProfileScreen() {
 
             {/* Stats */}
             <View style={styles.stats}>
-                <ProfileStat label="Seguidores" value={`${profile?.data()?.social?.followers?.length || 0}`} />
-                <ProfileStat label="Siguiendo" value={`${profile?.data()?.social?.following?.length || 0}`} />
-                <ProfileStat label="Planes creados" value={`${profile?.data()?.activity?.plansCreated || 0}`} />
-                <ProfileStat label="Boletos comprados" value={`${profile?.data()?.activity?.ticketsPurchased || 0}`} />
+                <ProfileStat
+                    label="Seguidores"
+                    value={`${profile?.data()?.social?.followers?.length || 0}`}
+                />
+                <ProfileStat
+                    label="Siguiendo"
+                    value={`${profile?.data()?.social?.following?.length || 0}`}
+                />
+                <ProfileStat
+                    label="Planes creados"
+                    value={`${profile?.data()?.activity?.plansCreated || 0}`}
+                />
+                <ProfileStat
+                    label="Boletos comprados"
+                    value={`${profile?.data()?.activity?.ticketsPurchased || 0}`}
+                />
             </View>
 
             {/* Cinephile Identity */}
@@ -148,20 +218,25 @@ export default function ProfileScreen() {
             {/* Action button */}
             <PrimaryButton
                 label={isEditing ? "Guardar cambios" : "Editar perfil"}
-                onClick={() => {setIsEditing(!isEditing)}}
-                loading={false}
+                onClick={async () => {
+                    if (isEditing) {
+                        await saveChanges();
+                    } else {
+                        setIsEditing(true);
+                    }
+                }}
+                loading={saving}
             />
 
             {/* Logout button */}
             <SecondaryButton
                 label="Cerrar sesión"
-                onClick={() => {auth.signOut()}}
+                onClick={() => { auth.signOut(); router.replace("/login"); }}
             />
 
         </ScrollView>
     );
 }
-
 
 /* ---------- Styles ---------- */
 
@@ -211,23 +286,7 @@ const styles = StyleSheet.create({
         marginBottom: 16
     },
 
-    readOnly: {
-        opacity: 0.6
-    },
-
     disabledText: {
         opacity: 0.4
-    },
-
-    actionButton: {
-        borderWidth: 1,
-        borderColor: "#000000",
-        paddingVertical: 14,
-        alignItems: "center"
-    },
-
-    actionText: {
-        fontSize: 14,
-        fontWeight: "500"
     }
 });
